@@ -1,6 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('.nav-link');
     const sections = document.querySelectorAll('section[id]');
+    const podcastCard = document.getElementById('podcastCard');
+    const portfolioItems = document.getElementById('portfolioItems');
+    let isRevealed = false;
+
+    const videoIds = ['rlDdSkxAkGc', 'hpKeWOdIDj8', '7Dhp7JERS8w', 'C7tRXzgu1J4'];
+
+    function getYouTubeThumbnail(videoId) {
+        return `https://img.youtube.com/vi/${videoId}/sddefault.jpg`;
+    }
+
+    function loadThumbnails() {
+        const portfolioCardElements = document.querySelectorAll('.portfolio-item');
+        portfolioCardElements.forEach((item) => {
+            const videoId = item.getAttribute('data-video-id');
+            const views = item.getAttribute('data-views');
+            const img = item.querySelector('.portfolio-thumbnail');
+            const viewsDiv = item.querySelector('.views');
+
+            img.src = getYouTubeThumbnail(videoId);
+            img.alt = `Video ${videoId} thumbnail`;
+            viewsDiv.textContent = views;
+        });
+    }
 
     function setActiveLink() {
         let current = '';
@@ -40,6 +63,19 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    podcastCard.addEventListener('click', () => {
+        if (!isRevealed) {
+            portfolioItems.classList.add('revealed');
+            isRevealed = true;
+            loadThumbnails();
+        } else {
+            portfolioItems.classList.remove('revealed');
+            isRevealed = false;
+        }
+    });
+
+    loadThumbnails();
 
     const submitBtn = document.querySelector('.submit-btn');
     const formInputs = document.querySelectorAll('.form-input');
@@ -88,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, observerOptions);
 
-    const animatedElements = document.querySelectorAll('.work-card, .portfolio-card, .contact-item, .skill-tag');
+    const animatedElements = document.querySelectorAll('.work-card, .contact-item, .skill-tag');
     animatedElements.forEach(el => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(30px)';
